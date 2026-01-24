@@ -1,54 +1,60 @@
-version: '3.9'
-
 services:
   web:
     build: .
-    # Note: Using python manage.py runserver is okay for development,
-    # but gunicorn is recommended for production-like testing.
     command: python /code/manage.py runserver 0.0.0.0:8000
-    
     volumes:
       - .:/code
     ports:
       - "8000:8000"
-    # The web service now depends on BOTH databases being available
     depends_on:
       - users_db
       - listings_db
-    
-    # ⚠️ IMPORTANT: Environment variables for Django settings
     environment:
-      # These variables will be read by your Django settings.py file
-      # and allow the web container to connect to the DB containers.
       - USERS_DB_HOST=${USERS_DB_HOST}
-      - USERS_DB_PORT=5432
+      - USERS_DB_PORT=${USERS_DB_PORT}
       - LISTINGS_DB_HOST=${LISTINGS_DB_HOST}
-      - LISTINGS_DB_PORT=5432
+      - LISTINGS_DB_PORT=${LISTINGS_DB_PORT}
 
-  # 1. USERS DATABASE SERVICE
   users_db:
     image: postgres:14
-    container_name: realestate_users_db
     volumes:
       - users_postgres_data:/var/lib/postgresql/data/
     environment:
-      # Define the actual database name that Django will connect to
-      - POSTGRES_DB=${POSTGRES_DB}
-      - POSTGRES_USER=${POSTGRES_USER}
-      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=${USERS_DB_NAME}
+      - POSTGRES_USER=${USERS_DB_USER}
+      - POSTGRES_PASSWORD=${USERS_DB_PASSWORD}
 
-  # 2. LISTINGS DATABASE SERVICE
   listings_db:
     image: postgres:14
-    container_name: realestate_listings_db
     volumes:
       - listings_postgres_data:/var/lib/postgresql/data/
     environment:
-      - POSTGRES_DB=${POSTGRES_DB}
-      - POSTGRES_USER=${POSTGRES_USER}
-      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=${LISTINGS_DB_NAME}
+      - POSTGRES_USER=${LISTINGS_DB_USER}
+      - POSTGRES_PASSWORD=${LISTINGS_DB_PASSWORD}
+
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - "8082:8080"
+  mailpit:
+        image: axllent/mailpit
+        container_name: mailpit
+        restart: unless-stopped
+        volumes:
+            - ./data:/data
+        ports:
+            - 8025:8025
+            - 1025:1025
+        environment:
+            MP_MAX_MESSAGES: 5000
+            MP_DATABASE: /data/mailpit.db
+            MP_SMTP_AUTH_ACCEPT_ANY: 1
+            MP_SMTP_AUTH_ALLOW_INSECURE: 1    
+
+ 
 
 volumes:
-  # Define persistent volumes for each database
   users_postgres_data:
   listings_postgres_data:

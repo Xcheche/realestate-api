@@ -7,10 +7,17 @@ ENV PYTHONUNBUFFERED 1
 WORKDIR /code
 
 # Install system dependencies   
-RUN apt update && apt install -y \  
+# Install system dependencies for Django + Pillow + Postgres
+RUN apt update && apt install -y \
     gettext \
     libpq-dev \
     gcc \
+    zlib1g-dev \
+    libjpeg-dev \
+    libpng-dev \
+    libfreetype6-dev \
+    libtiff5-dev \
+    libwebp-dev \
     && rm -rf /var/lib/apt/lists/*
 
 # Install dependencies

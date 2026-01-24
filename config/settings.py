@@ -85,21 +85,28 @@ WSGI_APPLICATION = 'config.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/6.0/ref/settings/#databases
 
+
+
+
 #Using seperate databases for the two apps User and Listing
 
+
 DATABASES = {
-    "default": {},
-    "users_db": {
+    "default": {   # make users_db the default
         "ENGINE": "django.db.backends.postgresql",
-        "NAME": config("POSTGRES_DB"),
-        "USER": config("POSTGRES_USER"),
-        "PASSWORD": config("POSTGRES_PASSWORD"),
+        "NAME": config("USERS_DB_NAME"),
+        "USER": config("USERS_DB_USER"),
+        "PASSWORD": config("USERS_DB_PASSWORD"),
+        "HOST": config("USERS_DB_HOST"),
+        "PORT": config("USERS_DB_PORT"),
     },
-    "listings_db": {
+    "listings": {   # secondary DB
         "ENGINE": "django.db.backends.postgresql",
-        "NAME": config("POSTGRES_DB"),
-        "USER": config("POSTGRES_USER") ,
-        "PASSWORD": config("POSTGRES_PASSWORD"),
+        "NAME": config("LISTINGS_DB_NAME"),
+        "USER": config("LISTINGS_DB_USER"),
+        "PASSWORD": config("LISTINGS_DB_PASSWORD"),
+        "HOST": config("LISTINGS_DB_HOST"),
+        "PORT": config("LISTINGS_DB_PORT"),
     },
 }
 
