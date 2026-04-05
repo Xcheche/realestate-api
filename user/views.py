@@ -5,5 +5,3 @@ from django.shortcuts import render
 #         "credsStore": "desktop",
 #         "currentContext": "desktop-linux"
 # }
-
-

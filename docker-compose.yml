@@ -9,6 +9,8 @@ services:
     depends_on:
       - users_db
       - listings_db
+    networks:
+      - real_estate_ntwk  
     environment:
       - USERS_DB_HOST=${USERS_DB_HOST}
       - USERS_DB_PORT=${USERS_DB_PORT}
@@ -19,6 +21,8 @@ services:
     image: postgres:14
     volumes:
       - users_postgres_data:/var/lib/postgresql/data/
+    networks:
+      - real_estate_ntwk     
     environment:
       - POSTGRES_DB=${USERS_DB_NAME}
       - POSTGRES_USER=${USERS_DB_USER}
@@ -28,6 +32,8 @@ services:
     image: postgres:14
     volumes:
       - listings_postgres_data:/var/lib/postgresql/data/
+    networks:
+      - real_estate_ntwk     
     environment:
       - POSTGRES_DB=${LISTINGS_DB_NAME}
       - POSTGRES_USER=${LISTINGS_DB_USER}
@@ -38,6 +44,8 @@ services:
     restart: always
     ports:
       - "8082:8080"
+    networks:
+      - real_estate_ntwk  
   mailpit:
         image: axllent/mailpit
         container_name: mailpit
@@ -47,6 +55,8 @@ services:
         ports:
             - 8025:8025
             - 1025:1025
+        networks:
+            - real_estate_ntwk    
         environment:
             MP_MAX_MESSAGES: 5000
             MP_DATABASE: /data/mailpit.db
@@ -58,3 +68,10 @@ services:
 volumes:
   users_postgres_data:
   listings_postgres_data:
+
+
+  
+networks:
+  real_estate_ntwk:
+    name: real_estate_ntwk
+    external: true

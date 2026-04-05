@@ -16,6 +16,18 @@ config:
 #Check logs
 logs:
 	docker compose logs -f
+#logs for web service
+logs-web:
+	docker compose logs -f web
+#logs for postgres service
+logs-listing-db:
+	
+	docker compose logs -f listings_db
+#logs for postgres2 service
+logs-users-db:
+	docker compose logs -f users_db	
+
+
 
 
 #Remove all stopped containers
@@ -40,7 +52,29 @@ psql:
 
 #Redis terminal	
 redis:
-	docker exec -it redis_container redis-cli			
+	docker exec -it redis_container redis-cli
+
+#Remove network for project
+network-v:
+	docker network prune -f
+
+
+#make migrations for users app
+make-migrations-users:
+	docker compose exec web python manage.py makemigrations user
+#make migrations for listings app
+make-migrations-listings:
+	docker compose exec web python manage.py makemigrations listing
+
+
+
+#migrate-users
+migrate-users:
+	docker compose exec web python manage.py migrate --database=users
+#make migrations for listings app
+migrate-listings:
+	docker compose exec web python manage.py migrate --database=listings
+
 
 
 
