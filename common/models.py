@@ -9,7 +9,7 @@ from django.utils.timezone import now
 class TimeStampedModel(models.Model):
     # Utility fields
     uniqueId = models.CharField(null=True, blank=True, max_length=100)
-    is_published = models.CharField(max_length=255, default="published")
+    is_published = models.BooleanField(default=False)
     date_created = models.DateTimeField(default=now)
 
     # Make abstract so that it doesn't create a table in the database

@@ -75,6 +75,10 @@ migrate-users:
 migrate-listings:
 	docker compose exec web python manage.py migrate --database=listings
 
+#Create superuser
+createsuperuser:
+	docker compose exec web python manage.py createsuperuser --database=users
+
 
 
 

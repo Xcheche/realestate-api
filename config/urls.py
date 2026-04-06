@@ -31,5 +31,5 @@ urlpatterns = [
     path("api/token/refresh/", TokenRefreshView.as_view()),
     path("api/token/verify/", TokenVerifyView.as_view()),
     # --------------Admin-----------------------------
-    path("admin/", admin.site.urls),
+    path("supersecret/", admin.site.urls),
 ]

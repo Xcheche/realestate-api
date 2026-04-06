@@ -1,7 +1,8 @@
+from uuid import uuid4
+
 from django.db import models
 from common.models import CommonModel
 from django.utils.timezone import now
-from django.utils import timezone
 from common.manager import GeneralManager, AllObjectsManager
 
 # Create your models here.
@@ -32,6 +33,7 @@ class Listing(CommonModel):
     photo_1 = models.ImageField(upload_to="listing_photos/%Y/%m/%d/", blank=True)
     photo_2 = models.ImageField(upload_to="listing_photos/%Y/%m/%d/", blank=True)
     photo_3 = models.ImageField(upload_to="listing_photos/%Y/%m/%d/", blank=True)
+    status = models.CharField(max_length=255,choices=[("drafts", "Drafts"), ("published", "Published")], default="drafts", db_index=True)
   
     #---------------Objects manager-----------------
     objects = GeneralManager()
@@ -52,3 +54,8 @@ class Listing(CommonModel):
         indexes = [
             models.Index(fields=["city", "state", "zipcode"]),
         ]    
+    
+    def save(self, *args, **kwargs):
+        if not self.uniqueId:
+            self.uniqueId = uuid4().hex[:12]
+        super().save(*args, **kwargs)
